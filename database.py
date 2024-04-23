@@ -21,3 +21,19 @@ class database:
         cursor.execute(sql)
         result = cursor.fetchall()
         return result[0]
+
+    def get_top_products_ids (self, quantity:int) -> list:
+        sql =   f"select id from stock.products " \
+                f"order by rating desc " \
+                f"limit {quantity}"
+        cursor = self.connection.cursor()
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        return result
+    
+    def get_top_products (self, quantity:int) -> list:
+        top_products = []
+        top_products_ids = self.get_top_products_ids(quantity)
+        for id in top_products_ids:
+            top_products.append (self.get_product_details(id[0]))
+        return top_products
